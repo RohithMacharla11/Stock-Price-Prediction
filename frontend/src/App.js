@@ -192,23 +192,23 @@ function App() {
             connectNulls={false}
           />
           
-          {/* Confidence interval lines */}
-          <Line
-            type="monotone"
-            dataKey="upper"
-            stroke="rgba(239, 68, 68, 0.5)"
+          {/* Upper bound line */}
+          <Line 
+            type="monotone" 
+            dataKey="upper" 
+            stroke="rgba(239, 68, 68, 0.3)" 
             strokeWidth={1}
-            strokeDasharray="5 5"
             dot={false}
             name="Upper Bound"
             connectNulls={false}
           />
-          <Line
-            type="monotone"
-            dataKey="lower"
-            stroke="rgba(239, 68, 68, 0.5)"
+          
+          {/* Lower bound line */}
+          <Line 
+            type="monotone" 
+            dataKey="lower" 
+            stroke="rgba(239, 68, 68, 0.3)" 
             strokeWidth={1}
-            strokeDasharray="5 5"
             dot={false}
             name="Lower Bound"
             connectNulls={false}
