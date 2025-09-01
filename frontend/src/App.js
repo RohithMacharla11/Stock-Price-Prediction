@@ -125,62 +125,92 @@ function App() {
     if (!predictionResult) return null;
 
     const { historical, forecast, symbol } = predictionResult.chart_data;
-
-    const traces = [
-      {
-        x: historical.dates,
-        y: historical.actual,
-        type: 'scatter',
-        mode: 'lines',
-        name: 'Historical Prices',
-        line: { color: '#3b82f6', width: 2 },
-      },
-      {
-        x: forecast.dates,
-        y: forecast.forecast,
-        type: 'scatter',
-        mode: 'lines',
-        name: 'Forecast',
-        line: { color: '#ef4444', width: 2 },
-      },
-      {
-        x: forecast.dates,
-        y: forecast.upper_bound,
-        type: 'scatter',
-        mode: 'lines',
-        name: 'Upper Bound',
-        line: { color: 'rgba(239, 68, 68, 0.3)', width: 1 },
-        showlegend: false,
-      },
-      {
-        x: forecast.dates,
-        y: forecast.lower_bound,
-        type: 'scatter',
-        mode: 'lines',
-        name: 'Lower Bound',
-        line: { color: 'rgba(239, 68, 68, 0.3)', width: 1 },
-        fill: 'tonexty',
-        fillcolor: 'rgba(239, 68, 68, 0.1)',
-        showlegend: false,
-      },
-    ];
+    
+    // Combine historical and forecast data for the chart
+    const chartData = [];
+    
+    // Add historical data
+    historical.dates.forEach((date, index) => {
+      chartData.push({
+        date: date,
+        actual: historical.actual[index],
+        type: 'historical'
+      });
+    });
+    
+    // Add forecast data
+    forecast.dates.forEach((date, index) => {
+      chartData.push({
+        date: date,
+        forecast: forecast.forecast[index],
+        upper: forecast.upper_bound[index],
+        lower: forecast.lower_bound[index],
+        type: 'forecast'
+      });
+    });
 
     return (
-      <Plot
-        data={traces}
-        layout={{
-          title: `${symbol} Stock Price Prediction`,
-          xaxis: { title: 'Date' },
-          yaxis: { title: 'Price' },
-          height: 500,
-          showlegend: true,
-          hovermode: 'x unified',
-          plot_bgcolor: 'rgba(0,0,0,0)',
-          paper_bgcolor: 'rgba(0,0,0,0)',
-        }}
-        style={{ width: '100%' }}
-        config={{ responsive: true }}
-      />
+      <ResponsiveContainer width="100%" height={500}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis 
+            dataKey="date" 
+            tick={{ fontSize: 12 }}
+            interval="preserveStartEnd"
+          />
+          <YAxis tick={{ fontSize: 12 }} />
+          <Tooltip 
+            labelFormatter={(value) => `Date: ${value}`}
+            formatter={(value, name) => [
+              value ? value.toFixed(2) : 'N/A', 
+              name === 'actual' ? 'Historical Price' : 
+              name === 'forecast' ? 'Forecast Price' :
+              name === 'upper' ? 'Upper Bound' : 'Lower Bound'
+            ]}
+          />
+          <Legend />
+          
+          {/* Historical prices */}
+          <Line 
+            type="monotone" 
+            dataKey="actual" 
+            stroke="#3b82f6" 
+            strokeWidth={2}
+            dot={false}
+            name="Historical Price"
+            connectNulls={false}
+          />
+          
+          {/* Forecast line */}
+          <Line 
+            type="monotone" 
+            dataKey="forecast" 
+            stroke="#ef4444" 
+            strokeWidth={2}
+            dot={false}
+            name="Forecast"
+            connectNulls={false}
+          />
+          
+          {/* Confidence interval */}
+          <Area
+            type="monotone"
+            dataKey="upper"
+            stackId="1"
+            stroke="none"
+            fill="rgba(239, 68, 68, 0.1)"
+            name="Upper Bound"
+          />
+          <Area
+            type="monotone"
+            dataKey="lower"
+            stackId="1"
+            stroke="none"
+            fill="rgba(239, 68, 68, 0.1)"
+            name="Lower Bound"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     );
   };
 
