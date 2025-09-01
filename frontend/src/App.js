@@ -151,7 +151,7 @@ function App() {
 
     return (
       <ResponsiveContainer width="100%" height={500}>
-        <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+        <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis 
             dataKey="date" 
@@ -192,24 +192,28 @@ function App() {
             connectNulls={false}
           />
           
-          {/* Confidence interval */}
-          <Area
+          {/* Confidence interval lines */}
+          <Line
             type="monotone"
             dataKey="upper"
-            stackId="1"
-            stroke="none"
-            fill="rgba(239, 68, 68, 0.1)"
+            stroke="rgba(239, 68, 68, 0.5)"
+            strokeWidth={1}
+            strokeDasharray="5 5"
+            dot={false}
             name="Upper Bound"
+            connectNulls={false}
           />
-          <Area
+          <Line
             type="monotone"
             dataKey="lower"
-            stackId="1"
-            stroke="none"
-            fill="rgba(239, 68, 68, 0.1)"
+            stroke="rgba(239, 68, 68, 0.5)"
+            strokeWidth={1}
+            strokeDasharray="5 5"
+            dot={false}
             name="Lower Bound"
+            connectNulls={false}
           />
-        </AreaChart>
+        </LineChart>
       </ResponsiveContainer>
     );
   };
