@@ -4,11 +4,12 @@ Create the project directory:
 mkdir bnp-stock-predictor
 cd bnp-stock-predictor
 Create the following folder structure:
-
+```
 bnp-stock-predictor/
 ├── backend/
 ├── frontend/
 └── sample_bnp_data.csv
+```
 2. Backend Setup (FastAPI + Prophet)
 # Create backend directory
 mkdir backend
